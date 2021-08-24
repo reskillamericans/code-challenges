@@ -5,33 +5,96 @@ export {Grid, runChallenge};
 
 const delay = 100;
 
-function runChallenge(solution) {
+// paused, run, or step, complete
+let mode = 'paused';
+let steps = 0;
+let stepsText;
+let grid;
+let solution;
+let ctx;
+
+// Solution generator.
+let soln;
+
+function runChallenge(solutionArg) {
     let canvasSize = 600
-    let grid = new Grid(10, canvasSize);
+    grid = new Grid(10, canvasSize);
+    solution = solutionArg;
 
     let stage = document.getElementById('challenge');
     stage.innerHTML = `
-        <canvas width="${canvasSize}" height="${canvasSize}" id=grid></canvas>
+        <canvas id="grid" width="${canvasSize}" height="${canvasSize}"></canvas>
+        <div id="panel">
+            <button id="pause-run-btn">Run</button>
+            <button id="step-btn">Step</button>
+            <button id="restart-btn">Restart</button>
+            Steps: <span id="steps">${steps}</span>
+        </div>
     `;
 
-    let ctx = document.getElementById('grid').getContext('2d');
+    ctx = document.getElementById('grid').getContext('2d');
     grid.draw(ctx);
 
-    // Create generator (asyc function that yields).
-    let soln = solution(grid);
+    stepsText = document.getElementById('steps');
 
-    animate(ctx, grid, soln);
+    let pauseRunBtn = document.getElementById('pause-run-btn');
+    pauseRunBtn.addEventListener('click', () => {
+        if (mode === 'step') {
+            return;
+        }
+        mode = mode === 'paused' ? 'run' : 'paused';
+        pauseRunBtn.innerText = mode === 'run' ? "Pause" : "Run";
+        console.log(mode);
+    });
+
+    let stepBtn = document.getElementById('step-btn');
+    stepBtn.addEventListener('click', () => {
+        mode = 'step';
+        pauseRunBtn.innerText = 'Run';
+    });
+
+    let restartBtn = document.getElementById('restart-btn');
+    restartBtn.addEventListener('click', () => {
+        soln = undefined;
+        mode = 'paused';
+        pauseRunBtn.innerText = 'Run';
+        grid = new Grid(10, canvasSize);
+        steps = 0;
+        grid.draw(ctx);
+        stepsText.innerText = `${steps}`;
+    });
+
+    animate();
 }
 
-function animate(ctx, grid, soln) {
+function animate() {
     // After a delay - request the next frame to be drawn - but
     // only allow next "step" in the solution (defined by yield).
-    setTimeout(() => requestAnimationFrame(() => animate(ctx, grid, soln)), delay);
-    grid.draw(ctx);
-    try {
-        soln.next();
-    } catch (e) {
-        console.log(`Solution threw an exception: ${e}`);
+    setTimeout(() => requestAnimationFrame(() => animate()), delay);
+    if (mode === 'run' || mode === 'step') {
+        if (soln === undefined) {
+            try {
+                soln = solution(grid);
+            } catch (e) {
+                console.log(`Solution threw an exception: ${e}`);
+                mode = 'complete';
+            }
+            steps++;
+        } else {
+            try {
+                soln.next();
+                steps++;
+            } catch (e) {
+                console.log(`Solution threw an exception: ${e}`);
+                mode = 'complete';
+            }
+        }
+        grid.draw(ctx);
+        stepsText.innerText = `${steps}`;
+        // Step is a 1-shot.
+        if (mode === 'step') {
+            mode = 'paused';
+        }
     }
 }
 
@@ -88,10 +151,10 @@ class Grid {
     cell(rw, col) {
         let i = rw * this.size + col;
         // Allocate the cell if not created already.
-        if (this.cell[i] === undefined) {
-            this.cell[i] = new Cell(this, rw, col);
+        if (this.cells[i] === undefined) {
+            this.cells[i] = new Cell(this, rw, col);
         }
-        return this.cell[i];
+        return this.cells[i];
     }
 
     wallIndex(rw, col, dir) {
