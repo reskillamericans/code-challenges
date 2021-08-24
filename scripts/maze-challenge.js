@@ -3,9 +3,11 @@
 
 export {Grid, runChallenge};
 
+const delay = 100;
+
 function runChallenge(solution) {
     let canvasSize = 600
-    let g = new Grid(10, canvasSize);
+    let grid = new Grid(10, canvasSize);
 
     let stage = document.getElementById('challenge');
     stage.innerHTML = `
@@ -13,13 +15,21 @@ function runChallenge(solution) {
     `;
 
     let ctx = document.getElementById('grid').getContext('2d');
+    grid.draw(ctx);
 
-    g.draw(ctx);
+    // Create generator (asyc function that yields).
+    let soln = solution(grid);
 
+    animate(ctx, grid, soln);
+}
+
+function animate(ctx, grid, soln) {
+    // After a delay - request the next frame to be drawn - but
+    // only allow next "step" in the solution (defined by yield).
+    setTimeout(() => requestAnimationFrame(() => animate(ctx, grid, soln)), delay);
+    grid.draw(ctx);
     try {
-        for (let val of solution(g)) {
-            g.draw(ctx);
-        }
+        soln.next();
     } catch (e) {
         console.log(`Solution threw an exception: ${e}`);
     }
@@ -135,8 +145,11 @@ class Cell {
     removeWall(dir) {
         let i = this.grid.wallIndex(this.rw, this.col, dir);
         if (i === undefined) {
-            console.warn(`Attempt to remove a boundary wall (${this.rw}, ${this.col} ${directions[dir]}) is not allowed.`);
+            console.warn(`Attempt to remove a boundary wall at ${this} ${directions[dir]} is not allowed.`);
             return;
+        }
+        if (!this.grid.walls[i]) {
+            console.info(`Wall at ${this} ${directions[dir]} is already removed.`);
         }
         this.grid.walls[i] = false;
     }
@@ -146,5 +159,9 @@ class Cell {
         let cellSize = this.grid.cellSize;
         return [margin + this.col * cellSize, margin + this.rw * cellSize,
                 margin + (this.col + 1) * cellSize, margin + (this.rw + 1) * cellSize];
-    }    
+    }
+
+    toString() {
+        return `Cell (${this.rw}, ${this.col})`;
+    }
 }

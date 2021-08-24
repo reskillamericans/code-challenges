@@ -15,11 +15,19 @@
 
         runChallenge(function *(grid) {
             console.log("Challenge is run");
-            for (let i = 0; i < 10; i++) {
-                grid.cell(i, i).removeWall(1);
+            while(true) {
+                let rw = randomInt(grid.size);
+                let col = randomInt(grid.size);
+                let dir = randomInt(4);
+                let c = grid.cell(rw, col);
+                c.removeWall(dir);
                 yield;
-            }
+            };
         });
+
+        function randomInt(max) {
+            return Math.floor(Math.random() * max);
+        }
     </script>
 </body>
 </html>
