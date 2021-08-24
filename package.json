@@ -1,0 +1,24 @@
+{
+  "name": "code-challenges",
+  "version": "1.0.0",
+  "description": "Weekly code challenges sandbox code.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --ui tdd"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reskillamericans/code-challenges.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/reskillamericans/code-challenges/issues"
+  },
+  "homepage": "https://github.com/reskillamericans/code-challenges#readme",
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^9.1.0"
+  }
+}

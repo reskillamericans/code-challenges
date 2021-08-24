@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Maze Generator Sample</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+<body>
+
+    <div id="challenge"></div>
+    
+    <script type="module">
+        import {runChallenge, Grid} from '/scripts/maze-challenge.js';
+
+        runChallenge(function *(grid) {
+            console.log("Challenge is run");
+            for (let i = 0; i < 10; i++) {
+                console.log(grid.size);
+                yield;
+            }
+        });
+    </script>
+</body>
+</html>
