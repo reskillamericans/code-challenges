@@ -1,8 +1,6 @@
 // Grid coordinates (rw, col), begin at (0, 0) for the upper
 // left and continue to the right and down.
 
-// For directions 0(N), 1(E), 2(S), and 3(W).
-
 export {Grid, runChallenge};
 
 function runChallenge(solution) {
@@ -20,13 +18,15 @@ function runChallenge(solution) {
 
     try {
         for (let val of solution(g)) {
-            console.log("render");
+            g.draw(ctx);
         }
     } catch (e) {
         console.log(`Solution threw an exception: ${e}`);
     }
 }
 
+// For directions 0(N), 1(E), 2(S), and 3(W).
+const directions = ['up', 'right', 'down', 'left'];
 const drw = [0, 1, 0, -1];
 const dcol = [-1, 0, 1, 0];
 const margin = 5;
@@ -38,7 +38,7 @@ class Grid {
         this.canvasSize = canvasSize;
         this.cellSize = (this.canvasSize - 2 * margin) / this.size;
         this.cells = new Array(this.size ** 2);
-        this.walls = new Array(2 * (this.size - 1) ** 2);
+        this.walls = new Array(2 * this.size ** 2);
 
         // Walls are below and to the right of the  corresponding cell.
         for (let i = 0; i < this.walls.length; i++) {
@@ -56,9 +56,8 @@ class Grid {
             for (let col = 0; col < this.size; col++) {
                 let c = this.cell(rw, col);
                 let rc = c.rect();
-                console.log(rc);
                 // Bottom
-                if (rw < this.size - 1) {
+                if (rw < this.size - 1 && c.testWall(2)) {
                     ctx.beginPath();
                     ctx.moveTo(rc[0], rc[3]);
                     ctx.lineTo(rc[2], rc[3]);
@@ -66,7 +65,7 @@ class Grid {
                 }
 
                 // Right
-                if (col < this.size - 1) {
+                if (col < this.size - 1 && c.testWall(1)) {
                     ctx.beginPath();
                     ctx.moveTo(rc[2], rc[1]);
                     ctx.lineTo(rc[2], rc[3]);
@@ -96,11 +95,13 @@ class Grid {
             col -= 1;
         }
         // Immutable walls return undefined index.
-        if (rw < 0 || col < 0 || rw >= this.size || col >= this.size) {
+        if (rw < 0 || col < 0 ||
+            rw === this.size - 1 && dir == 2 ||
+            col === this.size - 1 && dir == 1) {
             return undefined;
         }
         // Walls stored row-order, all vertical first, then horizontals;
-        return rw * (this.size - 1) + this.col + (dir % 2 === 0) ? (this.size - 1) ** 2 : 0;
+        return col + rw * this.size + ((dir % 2 === 0) ? this.size ** 2 : 0);
     }
 }
 
@@ -134,7 +135,7 @@ class Cell {
     removeWall(dir) {
         let i = this.grid.wallIndex(this.rw, this.col, dir);
         if (i === undefined) {
-            console.warn('Attempt to remove a boundary wall is not allowed.');
+            console.warn(`Attempt to remove a boundary wall (${this.rw}, ${this.col} ${directions[dir]}) is not allowed.`);
             return;
         }
         this.grid.walls[i] = false;

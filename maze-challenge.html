@@ -9,14 +9,14 @@
 <body>
 
     <div id="challenge"></div>
-    
+
     <script type="module">
         import {runChallenge, Grid} from '/scripts/maze-challenge.js';
 
         runChallenge(function *(grid) {
             console.log("Challenge is run");
             for (let i = 0; i < 10; i++) {
-                console.log(grid.size);
+                grid.cell(i, i).removeWall(1);
                 yield;
             }
         });
