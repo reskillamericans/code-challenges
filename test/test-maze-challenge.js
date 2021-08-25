@@ -18,6 +18,11 @@ suite('Grid', () => {
     test('Cells accessor', () => {
         let c = g.cell(0, 0);
         assert.equal(c.mark, false);
+
+        assert.equal(g.cell(-1, 4), undefined, 'Out of bounds cell top');
+        assert.equal(g.cell(4, -1), undefined, 'Out of bounds cell left');
+        assert.equal(g.cell(10, 4), undefined, 'Out of bounds cell bottom');
+        assert.equal(g.cell(4, 10), undefined, 'Out of bounds cell right');
     });
 
     test('Mark cells', () => {

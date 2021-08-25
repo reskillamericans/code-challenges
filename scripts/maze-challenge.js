@@ -163,6 +163,10 @@ class Grid {
 
     cell(rw, col) {
         let i = rw * this.size + col;
+        // Out of bounds reference to the grid - return undefined.
+        if (rw < 0 || col < 0 || rw >= this.size || col >= this.size) {
+            return undefined;
+        }
         // Allocate the cell if not created already.
         if (this.cells[i] === undefined) {
             this.cells[i] = new Cell(this, rw, col);
