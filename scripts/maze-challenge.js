@@ -3,7 +3,7 @@
 
 export {Grid, runChallenge};
 
-const delay = 100;
+let delay = 300;
 
 // paused, run, or step, complete
 let mode = 'paused';
@@ -24,11 +24,19 @@ function runChallenge(solutionArg) {
     let stage = document.getElementById('challenge');
     stage.innerHTML = `
         <canvas id="grid" width="${canvasSize}" height="${canvasSize}"></canvas>
-        <div id="panel">
+        <div class="panel">
             <button id="pause-run-btn">Run</button>
             <button id="step-btn">Step</button>
             <button id="restart-btn">Restart</button>
             Steps: <span id="steps">${steps}</span>
+        </div>
+        <div class="panel">
+            Speed: <select id="speed">
+                <option value="1000">Slow</option>
+                <option value="300" selected>Medium</option>
+                <option value="100">Fast</option>
+                <option value="0">Hyper-speed</option>
+            </select>
         </div>
     `;
 
@@ -64,13 +72,18 @@ function runChallenge(solutionArg) {
         stepsText.innerText = `${steps}`;
     });
 
+    let speedOption = document.getElementById('speed');
+    speedOption.addEventListener('change', (e) => {
+        delay = parseInt(speedOption.value);
+    });
+
     animate();
 }
 
 function animate() {
     // After a delay - request the next frame to be drawn - but
     // only allow next "step" in the solution (defined by yield).
-    setTimeout(() => requestAnimationFrame(() => animate()), delay);
+    setTimeout(() => requestAnimationFrame(() => animate()), mode === 'run' ? delay : 0);
     if (mode === 'run' || mode === 'step') {
         if (soln === undefined) {
             try {
