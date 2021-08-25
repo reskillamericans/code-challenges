@@ -140,7 +140,6 @@ class Grid {
 
         ctx.lineWidth = 3;
         ctx.fillStyle = '#fff8dc';
-        ctx.strokeRect(margin, margin, this.canvasSize - 2 * margin, this.canvasSize - 2 * margin);
 
         // Draw background first, so borders may overlap them.
         for (let rw = 0; rw < this.size; rw++) {
@@ -153,23 +152,31 @@ class Grid {
             }
         }
 
+        ctx.strokeRect(margin, margin, this.canvasSize - 2 * margin, this.canvasSize - 2 * margin);
+
         for (let rw = 0; rw < this.size; rw++) {
             for (let col = 0; col < this.size; col++) {
                 let c = this.cell(rw, col);
                 let rc = c.rect();
+
+                // Note that we extend all lines 1 pixel on the ends.
+                // This is to ensure that lines that meet in a corner
+                // do not display a "notch" artifact and corners look
+                // clean.
+
                 // Bottom
                 if (rw < this.size - 1 && c.testWall(2)) {
                     ctx.beginPath();
-                    ctx.moveTo(rc[0], rc[3]);
-                    ctx.lineTo(rc[2], rc[3]);
+                    ctx.moveTo(rc[0] - 1, rc[3]);
+                    ctx.lineTo(rc[2] + 1, rc[3]);
                     ctx.stroke();
                 }
 
                 // Right
                 if (col < this.size - 1 && c.testWall(1)) {
                     ctx.beginPath();
-                    ctx.moveTo(rc[2], rc[1]);
-                    ctx.lineTo(rc[2], rc[3]);
+                    ctx.moveTo(rc[2], rc[1] - 1);
+                    ctx.lineTo(rc[2], rc[3] + 1);
                     ctx.stroke();
                 }
             }

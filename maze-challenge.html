@@ -38,21 +38,37 @@
     <div id="challenge"></div>
 
     <script type="module">
-        import {runChallenge, Grid} from './scripts/maze-challenge.js';
+        import { runChallenge, Grid } from './scripts/maze-challenge.js';
 
-        runChallenge(function *(grid) {
-            console.log("Challenge is run");
-            let count = 400;
-            while(count !== 0) {
-                count--;
+        const drw = [-1, 0, 1, 0];
+        const dcol = [0, 1, 0, -1];
+
+        runChallenge(function* (grid) {
+            // I think this many walls need to be removed to form
+            // a fully connected maze.
+            let wallCount = grid.size ** 2 - 1;
+            let center = Math.floor(grid.size / 2);
+
+            // Start out "marking" the center cell.
+            let c = grid.cell(center, center);
+            c.mark = true;
+
+            // Now choose a wall at random, and remove it IF
+            // it connects an unmarked and a marked cell.
+            while (wallCount > 0) {
                 let rw = randomInt(grid.size);
                 let col = randomInt(grid.size);
                 let dir = randomInt(4);
-                let c = grid.cell(rw, col);
-                c.mark = true;
-                c.removeWall(dir);
-                yield;
-            };
+                let c1 = grid.cell(rw, col);
+                let c2 = grid.cell(rw + drw[dir], col + dcol[dir]);
+                if (c1 && c2 && c1.mark !== c2.mark) {
+                    c1.mark = c2.mark = true;
+                    c1.removeWall(dir);
+                    wallCount--;
+                    console.log(`${c1} - ${c2}: ${wallCount} remaining.`);
+                    yield;
+                }
+            }
         });
 
         function randomInt(max) {
