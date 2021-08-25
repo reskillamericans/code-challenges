@@ -42,7 +42,9 @@
 
         runChallenge(function *(grid) {
             console.log("Challenge is run");
-            while(true) {
+            let count = 400;
+            while(count !== 0) {
+                count--;
                 let rw = randomInt(grid.size);
                 let col = randomInt(grid.size);
                 let dir = randomInt(4);

@@ -95,7 +95,10 @@ function animate() {
             steps++;
         } else {
             try {
-                soln.next();
+                // The generator actually finished.  Mark solution complete.
+                if (soln.next().done) {
+                    mode = 'complete';
+                }
                 steps++;
             } catch (e) {
                 console.log(`Solution threw an exception: ${e}`);
@@ -103,7 +106,7 @@ function animate() {
             }
         }
         grid.draw(ctx);
-        stepsText.innerText = `${steps}`;
+        stepsText.innerText = `${steps}${mode === 'complete' ? "!" : ""}`;
         // Step is a 1-shot.
         if (mode === 'step') {
             mode = 'paused';
