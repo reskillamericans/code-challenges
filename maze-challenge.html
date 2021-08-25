@@ -49,6 +49,7 @@
                 let col = randomInt(grid.size);
                 let dir = randomInt(4);
                 let c = grid.cell(rw, col);
+                c.mark = true;
                 c.removeWall(dir);
                 yield;
             };

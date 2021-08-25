@@ -139,7 +139,19 @@ class Grid {
         ctx.clearRect(0, 0, this.canvasSize, this.canvasSize);
 
         ctx.lineWidth = 3;
+        ctx.fillStyle = '#fff8dc';
         ctx.strokeRect(margin, margin, this.canvasSize - 2 * margin, this.canvasSize - 2 * margin);
+
+        // Draw background first, so borders may overlap them.
+        for (let rw = 0; rw < this.size; rw++) {
+            for (let col = 0; col < this.size; col++) {
+                let c = this.cell(rw, col);
+                let rc = c.rect();
+                if (c.mark) {
+                    ctx.fillRect(rc[0], rc[1], rc[2] - rc[0], rc[3] - rc[1]);
+                }
+            }
+        }
 
         for (let rw = 0; rw < this.size; rw++) {
             for (let col = 0; col < this.size; col++) {
