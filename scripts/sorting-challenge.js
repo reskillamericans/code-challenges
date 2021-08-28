@@ -8,19 +8,17 @@ let steps = 0;
 let stepsText;
 let array;
 let solution;
-let tbl;
 
 // Solution generator.
 let soln;
 
 function runChallenge(solutionArg) {
     let canvasSize = 600
-    array = new VisualArray(20);
     solution = solutionArg;
 
-    let stage = document.getElementById('challenge');
-    stage.innerHTML = `
-        <table id="array"></table>
+    let challenge = document.getElementById('challenge');
+    challenge.innerHTML = `
+        <div id="array"></div>
         <div class="panel">
             <button id="pause-run-btn">Run</button>
             <button id="step-btn">Step</button>
@@ -37,8 +35,7 @@ function runChallenge(solutionArg) {
         </div>
     `;
 
-    tbl = document.getElementById('array');
-    array.render(tbl);
+    array = new VisualArray(20, challenge.querySelector('#array'));
 
     stepsText = document.getElementById('steps');
 
@@ -63,9 +60,8 @@ function runChallenge(solutionArg) {
         soln = undefined;
         mode = 'paused';
         pauseRunBtn.innerText = 'Run';
-        array = new VisualArray(20);
+        array = new VisualArray(20, document.getElementById('array'));
         steps = 0;
-        array.render(tbl);
         stepsText.innerText = `${steps}`;
     });
 
@@ -102,7 +98,7 @@ function animate() {
                 mode = 'complete';
             }
         }
-        array.render(tbl);
+        array.update();
         stepsText.innerText = `${steps}${mode === 'complete' ? "!" : ""}`;
         // Step is a 1-shot.
         if (mode === 'step') {
@@ -112,22 +108,44 @@ function animate() {
 }
 
 class VisualArray {
-    constructor(size) {
+    constructor(size, stage) {
         this.size = size;
-        this.history = [];
         [this.data, this.handler] = createArrayProxy(size);
-        let target = this.handler.data;
+        this.target = this.handler.data;
         for (let i = 0; i < size; i++) {
-            target[i] = this.randomInt();
+            this.target[i] = this.randomInt();
         }
+        
+        // Remove any previous dom elements in the stage.
+        stage.replaceChildren();
+
+        this.elements = [];
+        for (let i = 0; i < size; i++) {
+            let elt = document.createElement('div');
+            this.elements.push(elt);
+            elt.className = 'arrayElt';
+            elt.textContent = this.target[i];
+            stage.appendChild(elt);
+        }
+
+        let panel = document.createElement('div');
+        panel.className = 'panel stats';
+        panel.innerHTML = 'Reads: <span id="reads">0</span>&nbsp;Writes: <span id="writes">0</span>';
+        this.reads = panel.querySelector('#reads');
+        this.writes = panel.querySelector('#writes');
+
+        stage.appendChild(panel);
     }
 
-    render(tbl) {
-        console.log("render TBD", this.history);
+    update() {
+        let h = this.handler.getHistory();
+        this.reads.innerText = this.handler.stats.gets;
+        this.writes.innerText = this.handler.stats.sets;
+        console.log("render TBD", this.handler.stats);
     }
 
     randomInt() {
-        return Math.floor(Math.random() * 4 * this.size - this.size);
+        return Math.floor(Math.random() * 3 * this.size + 1);
     }
 }
 
