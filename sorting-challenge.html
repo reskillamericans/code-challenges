@@ -11,37 +11,65 @@
 
     <h1>Reskill Americans<br>Code Challenge -- <br>Sorting an Array</h1>
 
-    <div>
+    <p>
         In this code challenge, you will be sorting the elements of an
-        array of numbers into ascending order.
-    </div>
+        array of numbers into ascending order.  You can allocate a fixed amount
+        of additional memory (but you should try not to make a copy of all the
+        array elements).
+    </p>
 
-    <div>
+    <p>
         You can watch a sample solution, by pressing the Run button, below. When
         you are ready to try writing your own solution, open this
         <a target="_blank" href="http://codepen.io/pen?template=YzQyVxy">CodePen Template</a>.
-    </div>
+    </p>
 
     <div>
-        Note the API reference at the bottom of this page.
+        <p>
+            There are many basic sorting algorithms to choose from:
+        </p>
+        <ul>
+            <li><a target="_blank" href="https://en.wikipedia.org/wiki/Selection_sort">Selection Sort</a> -
+                easy to code.</li>
+            <li><a target="_blank" href="https://en.wikipedia.org/wiki/Insertion_sort">Insertion Sort</a> -
+                still simple - slightly faster.</li>
+            <li><a target="_blank" href="https://en.wikipedia.org/wiki/Bubble_sort">Bubble Sort</a> -
+                not particularly fast - but fun to watch.</li>
+            <li><a target="_blank" href="https://en.wikipedia.org/wiki/Shellsort">Shell Sort</a> -
+                fast, but tricky to code, with many variants.</li>
+
+        </ul>
+        <p>
+            As well as some more advanced (more efficient) algorithms:
+        </p>
+            <ul>
+                <li><a target="_blank" href="https://en.wikipedia.org/wiki/Heapsort">Heap Sort</a></li>
+                <li><a target="_blank" href="https://en.wikipedia.org/wiki/Quicksort">Quick Sort</a></li>
+            </ul>
     </div>
 
     <div id="challenge"></div>
 
-    <div>
+    <p>
         If you'd like to see how the Grid visual simulator was implemented - you can find
         the source code on <a href="https://github.com/reskillamericans/code-challenges/blob/main/scripts/sorting-challenge.js">our Github repo</a>.
-    </div>
+    </p>
 
     <script type="module">
         import { runChallenge } from './scripts/sorting-challenge.js';
 
         runChallenge(function* (a) {
             for (let i = 0; i < a.length; i++) {
+                let jMin = i;
                 for (let j = i + 1; j < a.length; j++) {
-                    if (a[j] < a[i]) {
-                        [a[i], a[j]] = [a[j], a[i]];
+                    if (a[j] < a[jMin]) {
+                        jMin = j;
                     }
+                    yield;
+                }
+
+                if (jMin !== i) {
+                    [a[i], a[jMin]] = [a[jMin], a[i]];
                     yield;
                 }
             }
