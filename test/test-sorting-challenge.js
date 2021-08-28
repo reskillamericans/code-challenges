@@ -18,32 +18,29 @@ suite('VisualArray', () => {
 suite('ArrayProxy', () => {
     let a;
     let h;
+    let d;
 
     setup(() => {
         [a, h] = createArrayProxy(20);
+        d = h.data;
     });
 
     test('constructor', () => {
         assert(a.length, 20);
-        assert.equal(a[0], undefined);
+        assert.equal(d[0], undefined);
         assert.equal(h.size, 20);
-        assert.equal(h.isRecording, false);
     });
 
     test('set and get', () => {
-        h.measuring(true);
         a[0] = 123;
-        h.measuring(false);
-        assert.equal(a[0], 123);
+        assert.equal(d[0], 123);
         assert.equal(h.stats.sets, 1);
         assert.equal(h.stats.gets, 0);
     });
 
     test('only count array refs', () => {
-        h.measuring(true);
         a[0] = a.length;
-        h.measuring(false);
-        assert.equal(a[0], 20);
+        assert.equal(d[0], 20);
         assert.equal(h.stats.sets, 1);
         assert.equal(h.stats.gets, 0);
     });
@@ -61,10 +58,8 @@ suite('ArrayProxy', () => {
     });
 
     test('history', () => {
-        h.recording(true);
         a[0] = 123;
         a[1] = a[0] + 1;
-        h.recording(false);
         let hist = h.getHistory();
         assert.equal(h.history.length, 0);
         assert.deepEqual(hist, [

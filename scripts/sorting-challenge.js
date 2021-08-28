@@ -116,11 +116,10 @@ class VisualArray {
         this.size = size;
         this.history = [];
         [this.data, this.handler] = createArrayProxy(size);
+        let target = this.handler.data;
         for (let i = 0; i < size; i++) {
-            this.data[i] = this.randomInt();
+            target[i] = this.randomInt();
         }
-        this.handler.recording(true);
-        this.handler.measuring(true);
     }
 
     render(tbl) {
@@ -135,21 +134,12 @@ class VisualArray {
 function createArrayProxy(size) {
     let handler = {
         size: size,
+        data: new Array(size),
         stats: {
             gets: 0,
             sets: 0
         },
         history: [],
-        isRecording: false,
-        isMeasuring: false,
-
-        recording: (isRecording) => {
-            handler.isRecording = isRecording;
-        },
-
-        measuring: (isMeasuring) => {
-            handler.isMeasuring = isMeasuring;
-        },
 
         getHistory() {
             let result = handler.history;
@@ -165,16 +155,12 @@ function createArrayProxy(size) {
             if (i < 0 || i >= handler.size) {
                 throw Error(`Index ${i} is out of bounds (only indices are between 0 and ${handler.size - 1} (inclusive)).`);
             }
-            if (handler.isMeasuring) {
-                handler.stats.gets++;
-            }
-            if (handler.isRecording) {
-                handler.history.push({
-                    event: 'get',
-                    index: i,
-                    value: target[i]
-                });
-            }
+            handler.stats.gets++;
+            handler.history.push({
+                event: 'get',
+                index: i,
+                value: target[i]
+            });
             return target[i];
         },
 
@@ -186,21 +172,17 @@ function createArrayProxy(size) {
             if (i < 0 || i >= handler.size) {
                 throw Error(`Index ${i} is out of bounds (indices allowed between 0 and ${handler.size - 1} (inclusive)).`);
             }
-            if (handler.isMeasuring) {
-               handler.stats.sets++;
-            }
-            if (handler.isRecording) {
-                handler.history.push({
-                    event: 'set',
-                    index: i,
-                    newValue: value,
-                    oldValue: target[i]
-                })
-            }
+            handler.stats.sets++;
+            handler.history.push({
+                event: 'set',
+                index: i,
+                newValue: value,
+                oldValue: target[i]
+            });
             target[i] = value;
             return true;
         }
     };
 
-    return [new Proxy(new Array(size), handler), handler];
+    return [new Proxy(handler.data, handler), handler];
 }
