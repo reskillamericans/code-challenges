@@ -165,7 +165,6 @@ class VisualArray {
         this.reads.innerText = this.handler.stats.gets;
         this.writes.innerText = this.handler.stats.sets;
         this.lastHistory = h;
-        console.log("render TBD", this.handler.stats);
     }
 
     randomInt() {
