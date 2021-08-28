@@ -1,6 +1,7 @@
 export {runChallenge, VisualArray, createArrayProxy};
 
 let delay = 300;
+const arraySize = 50;
 
 // paused, run, or step, complete
 let mode = 'paused';
@@ -35,7 +36,7 @@ function runChallenge(solutionArg) {
         </div>
     `;
 
-    array = new VisualArray(20, challenge.querySelector('#array'));
+    array = new VisualArray(arraySize, challenge.querySelector('#array'));
 
     stepsText = document.getElementById('steps');
 
@@ -60,7 +61,7 @@ function runChallenge(solutionArg) {
         soln = undefined;
         mode = 'paused';
         pauseRunBtn.innerText = 'Run';
-        array = new VisualArray(20, document.getElementById('array'));
+        array = new VisualArray(arraySize, document.getElementById('array'));
         steps = 0;
         stepsText.innerText = `${steps}`;
     });
@@ -108,6 +109,15 @@ function animate() {
 }
 
 class VisualArray {
+    size;
+    data;
+    handler;
+    target;
+    elements = [];
+    reads;
+    writes;
+    lastHistory = [];
+
     constructor(size, stage) {
         this.size = size;
         [this.data, this.handler] = createArrayProxy(size);
@@ -119,7 +129,6 @@ class VisualArray {
         // Remove any previous dom elements in the stage.
         stage.replaceChildren();
 
-        this.elements = [];
         for (let i = 0; i < size; i++) {
             let elt = document.createElement('div');
             this.elements.push(elt);
@@ -139,8 +148,23 @@ class VisualArray {
 
     update() {
         let h = this.handler.getHistory();
+        for (let e of this.lastHistory) {
+            this.elements[e.index].className = 'arrayElt';
+        }
+        for (let e of h) {
+            if (e.event === 'get') {
+                this.elements[e.index].className = 'arrayElt read';
+            }
+        }
+        for (let e of h) {
+            if (e.event === 'set') {
+                this.elements[e.index].innerText = e.newValue;
+                this.elements[e.index].className = 'arrayElt write';
+            }
+        }
         this.reads.innerText = this.handler.stats.gets;
         this.writes.innerText = this.handler.stats.sets;
+        this.lastHistory = h;
         console.log("render TBD", this.handler.stats);
     }
 
