@@ -1,19 +1,6 @@
 import {assert} from 'chai';
 
-import {VisualArray, createArrayProxy} from '../scripts/sorting-challenge.js'
-
-suite('VisualArray', () => {
-    let a;
-
-    setup(() => {
-        a = new VisualArray(20);
-    });
-
-    test('constructor', () => {
-        assert.equal(a.size, 20);
-        assert.equal(a.data.length, 20);
-    });
-});
+import {createArrayProxy} from '../scripts/sorting-challenge.js'
 
 suite('ArrayProxy', () => {
     let a;
