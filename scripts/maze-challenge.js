@@ -52,7 +52,6 @@ function runChallenge(solutionArg) {
         }
         mode = mode === 'paused' ? 'run' : 'paused';
         pauseRunBtn.innerText = mode === 'run' ? "Pause" : "Run";
-        console.log(mode);
     });
 
     let stepBtn = document.getElementById('step-btn');
