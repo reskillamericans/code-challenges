@@ -1,6 +1,6 @@
 export { Runner };
 class Runner {
-    constructor(stage, simulator) {
+    constructor(stage, simulator, solutionFunction) {
         this.controls = {};
         this.mode = 'paused';
         this.steps = 0;
@@ -9,13 +9,10 @@ class Runner {
         this.simulator = simulator;
         simulator.appendVisualization(stage);
         this.appendControls();
-        this.animate();
-    }
-    // Return a partial function to attach a solution function.
-    makeRunner() {
-        return (solutionFunction) => {
+        if (solutionFunction !== undefined) {
             this.attachSolution(solutionFunction);
-        };
+        }
+        this.animate();
     }
     attachSolution(solutionFunction) {
         this.solutionFunction = solutionFunction;
@@ -115,7 +112,7 @@ Runner.controlsHTML = `
         <button id="pause-run-btn">Run</button>
         <button id="step-btn">Step</button>
         <button id="restart-btn">Restart</button>
-        Steps: <span id="steps">0</span>
+        Steps: <span id="steps-txt">0</span>
         </div>
         <div class="panel">
             Speed: <select id="speed">
@@ -125,3 +122,4 @@ Runner.controlsHTML = `
                 <option value="0">Hyper-speed</option>
             </select>
         </div>`;
+//# sourceMappingURL=challenge-runner.js.map

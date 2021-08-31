@@ -1,4 +1,6 @@
-export { Runner };
+export { Runner, Simulator };
+
+export type SolutionFunction = (...args: any) => Generator<void, void>;
 
 interface Simulator {
     appendVisualization(stage: HTMLElement): void;
@@ -8,8 +10,6 @@ interface Simulator {
 }
 
 type Mode = 'paused' | 'run' | 'step' | 'complete';
-
-type SolutionFunction = (...args: any) => Generator<void, void>;
 
 class Runner {
     stage : HTMLElement;
@@ -29,7 +29,7 @@ class Runner {
         <button id="pause-run-btn">Run</button>
         <button id="step-btn">Step</button>
         <button id="restart-btn">Restart</button>
-        Steps: <span id="steps">0</span>
+        Steps: <span id="steps-txt">0</span>
         </div>
         <div class="panel">
             Speed: <select id="speed">
@@ -40,19 +40,15 @@ class Runner {
             </select>
         </div>`;
 
-    constructor(stage: HTMLElement, simulator: Simulator) {
+    constructor(stage: HTMLElement, simulator: Simulator, solutionFunction?: SolutionFunction) {
         this.stage = stage;
         this.simulator = simulator;
         simulator.appendVisualization(stage);
         this.appendControls();
-        this.animate();
-    }
-
-    // Return a partial function to attach a solution function.
-    makeRunner(): (fn: SolutionFunction) => void {
-        return (solutionFunction: SolutionFunction) => {
+        if (solutionFunction !== undefined) {
             this.attachSolution(solutionFunction);
         }
+        this.animate();
     }
 
     attachSolution(solutionFunction: SolutionFunction) {

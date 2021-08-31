@@ -5,6 +5,7 @@
       "strict": true,
       "forceConsistentCasingInFileNames": true,
       "outDir": "scripts",
+      "sourceMap": true,
     },
     "include": ["src/**/*", "tests/**/*"],
   }
