@@ -4,26 +4,29 @@ class Runner {
         this.controls = {};
         this.mode = 'paused';
         this.steps = 0;
+        this.delay = 300;
         this.stage = stage;
         this.simulator = simulator;
         simulator.appendVisualization(stage);
         this.appendControls();
         this.animate();
     }
+    // Return a partial function to attach a solution function.
     makeRunner() {
         return (solutionFunction) => {
             this.attachSolution(solutionFunction);
         };
     }
+    attachSolution(solutionFunction) {
+        this.solutionFunction = solutionFunction;
+    }
     appendControls() {
-        this.stage.insertAdjacentHTML('beforeEnd', Runner.controlsHTML);
-        for (let i in controlIDs) {
-            let id = controlIDs[i];
-            controls[id] = document.getElementById(id);
-            if (controlEvents[i] !== undefined) {
-                controls[id].addEventListener(controlEvents[i], () => {
-                    this[handlers[i]]();
-                });
+        this.stage.insertAdjacentHTML('beforeend', Runner.controlsHTML);
+        for (let i in Runner.controlIDs) {
+            let id = Runner.controlIDs[i];
+            this.controls[id] = document.getElementById(id);
+            if (Runner.controlEvents[i] !== undefined) {
+                this.controls[id].addEventListener(Runner.controlEvents[i], this[Runner.handlers[i]].bind(this));
             }
         }
     }
@@ -47,6 +50,9 @@ class Runner {
         this.simulator.update();
         this.update();
     }
+    onSpeed() {
+        this.delay = parseInt(this.controls['speed'].value);
+    }
     setPauseRunText() {
         this.controls['pause-run-btn'].innerText = this.mode === 'run' ? "Pause" : "Run";
     }
@@ -54,14 +60,19 @@ class Runner {
         this.controls['steps-txt'].innerText = `${this.steps}${this.mode === 'complete' ? "!" : ""}`;
     }
     animate() {
+        let self = this;
         function nextFrame() {
-            requestAnimationFrame(() => this.animate());
+            requestAnimationFrame(() => self.animate());
         }
         if (this.mode === 'run') {
-            setTimeout(nextFrame, this.delay);
+            setTimeout(nextFrame, self.delay);
         }
         else {
             nextFrame();
+        }
+        // Not yet attached to a solution.
+        if (this.solutionFunction === undefined) {
+            return;
         }
         if (!(this.mode === 'run' || this.mode === 'step')) {
             return;
@@ -81,11 +92,11 @@ class Runner {
                 if (this.solutionIterator.next().done) {
                     this.mode = 'complete';
                 }
-                steps++;
+                this.steps++;
             }
             catch (e) {
                 console.log(`Solution threw an exception: ${e}`);
-                mode = 'complete';
+                this.mode = 'complete';
             }
         }
         this.simulator.update();
@@ -104,7 +115,7 @@ Runner.controlsHTML = `
         <button id="pause-run-btn">Run</button>
         <button id="step-btn">Step</button>
         <button id="restart-btn">Restart</button>
-        Steps: <span id="steps">${steps}</span>
+        Steps: <span id="steps">0</span>
         </div>
         <div class="panel">
             Speed: <select id="speed">
