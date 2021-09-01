@@ -6,7 +6,7 @@ export { runChallenge, Grid };
 function runChallenge(solutionFunction: SolutionFunction): void {
     let stage = document.getElementById('challenge')!;
     let sim = new GridSimulator();
-    let runner = new Runner(stage, sim, solutionFunction);
+    new Runner(stage, sim, solutionFunction);
 }
 
 class GridSimulator implements Simulator {
