@@ -50,9 +50,7 @@ $ npm test
 
 ## Continuous Integration
 
-This repository using [Github Continuous Integration](https://docs.github.com/es/actions/guides/building-and-testing-nodejs).  Every time new code
+This repository is using [Github Continuous Integration](https://docs.github.com/es/actions/guides/building-and-testing-nodejs).  Every time new code
 is pushed to the repository, or for each new pull request, Github will
 check out the code, install the npm dependencies, and run the tests.  The
 results can be viewed on the repository [Actions/Workflow](https://github.com/reskillamericans/code-challenges/actions/workflows/node-ci.yml) page.
-
-
