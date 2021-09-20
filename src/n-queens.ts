@@ -93,3 +93,7 @@ class Pos {
 }
 
 console.log(solveNQueens(8).join('\n'));
+
+for (let n = 1; n < 15; n++) {
+    console.log(`${n}: ${solveNQueens(n).length} solutions.`);
+}
