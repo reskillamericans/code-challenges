@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "test": "mocha --ui tdd scripts/tests tests"
+    "test": "mocha --ui tdd src/test*.js scripts/test*.js"
   },
   "type": "module",
   "repository": {
