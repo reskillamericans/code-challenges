@@ -1,0 +1,121 @@
+:root {
+  --codeFont: 'Roboto Mono', monospace;
+}
+
+body {
+  font-family: Verdana, san-serif;
+  max-width: 750px;
+  margin:  auto;
+  line-height: 1.5rem;
+  padding-bottom: 2rem;
+}
+
+li {
+  margin: 0.1rem;
+}
+
+h1 {
+  text-align: center;
+}
+
+.code {
+  font-family: var(--codeFont);
+  font-size: 1rem;
+  white-space: pre;
+}
+
+div.code-block {
+  border: 2px solid lightgray;
+  padding: 1rem;
+  background-color: floralwhite;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#user-code {
+  display: flex;
+  align-items: flex-start;
+  margin: 1.5rem 1.5rem;
+}
+
+textarea {
+  border: 2px solid gray;
+  resize: none;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+#user-code * {
+  padding: 0 1rem;
+}
+
+#ucode {
+  flex-grow: 1;
+}
+
+div.analysis {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem;
+  margin: 0 auto;
+  justify-content: space-between;
+  background-color: floralwhite;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#error {
+  display: none;
+  background-color: lightpink;
+  color: red;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin: 1rem;
+  padding: 0.6rem;
+}
+
+#canonical-years {
+  font-family: var(--codeFont);
+  margin-top: 2rem;
+}
+
+div.year {
+  display: flex;
+}
+
+div.year div:first-child {
+  border: 0;
+  font-weight: bold;
+}
+
+div.year div {
+  border: 2px solid black;
+  margin-left: -2px;
+  margin-top: -2px;
+  flex-basis: 0;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.heading {
+  font-weight: bold;
+  background-color: floralwhite;
+}
+
+.right {
+  background-color: lightgreen;
+}
+
+.wrong {
+  background-color: pink;
+}
+
+#boast {
+  font-style: italic;
+  font-weight: bold;
+  margin: 1rem auto;
+  padding: 0 4rem;
+}
+
+.twitter-share-button {
+  width: 20px;
+  height: 20px;
+  background-image: url("../images/twitter.svg");
+}

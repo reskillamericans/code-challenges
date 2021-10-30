@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./styles/days-in-a-month.css">
+
+    <title>How Many Days in the Month?</title>
+</head>
+
+<body>
+    <h1>How Many Days in the Month?</h1>
+    <p>
+        A common problem in working with dates, is to calculate the days of the month for any given
+        month and year. Due to leap years, the rules can get a little tricky. Here are the rules in
+        English:
+    </p>
+    <ul>
+        <li>Jan, Mar, May, Jul, Aug, Oct, Dec have 31 days.</li>
+        <li>Apr, Jun, Sep, Nov have 30 days.</li>
+        <li>Feb has 28 days EXCEPT when it is a leap year, and then it has 29.</li>
+        <li>Leap Year Rules
+            <ul>
+                <li>If the year is divisible by 4, it's a leap year.</li>
+                <li>EXCEPT, if it's divisible by 100, then it's NOT a leap year.</li>
+                <li>EXCEPT, if it's divisible by 400, then it really is a leap year (again).</li>
+            </ul>
+        </li>
+    </ul>
+    <p>
+        So, leap years include 2000 and 2004, but NOT 1900 or 2100.
+    </p>
+    <p> Here is a perfectly reasonable piece of code to calculate the days of the month for a given
+        month and year:
+    </p>
+    <div class="code-block">
+        <code id="sample" class="code"></code>
+    </div>
+    <p>
+        But, what if, just for fun, we'd like to write this function using the fewest possible characters (instead of
+        going for readability or maintainability)? Try filling in the expression below to evaluate to the number
+        of days in a month, <span class="code">m</span>, for a given year, <span class="code">y</span> (a first
+        attempt has been started for you).
+    </p>
+    <div id="user-code">
+        <label for="ucode">(m, y) =></label>
+        <textarea autofocus id="ucode" class="code"
+            placeholder="Enter a JavaScript expression">m % 2 ? 31 : 30</textarea>
+    </div>
+    <div id="error"></div>
+    <div class="analysis">
+        <div><span id="chars">9</span> characters</div>
+        <div>Accuracy: <span id="accuracy">0.00%</span></div>
+        <div>Efficiency: <span id="efficiency">0.00%</span> / char</div>
+    </div>
+
+    <div id="canonical-years">
+    </div>
+
+    <div id="boast">
+        I wrote a JavaScript expression for the number of days in a month
+        with <span id="accuracy">0.00%</span> accuracy in only
+        <span id="chars">0</span?> characters.  How well can you do?<br>
+        <a class="twitter-share-button"
+            href="https://twitter.com/intent/tweet?text=Hello%20world" data-size="large">
+        </a>
+    </div>
+
+    <script type="module">
+        import { initializePage } from "./scripts/src/days-in-a-month.js";
+
+        initializePage();
+    </script>
+</body>
+
+</html>

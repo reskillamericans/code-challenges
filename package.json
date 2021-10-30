@@ -4,7 +4,8 @@
   "description": "Weekly code challenges sandbox code.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --ui tdd tests"
+    "build": "tsc",
+    "test": "mocha --ui tdd scripts/tests"
   },
   "type": "module",
   "repository": {
@@ -18,6 +19,8 @@
   },
   "homepage": "https://github.com/reskillamericans/code-challenges#readme",
   "devDependencies": {
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^9.0.0",
     "chai": "^4.3.4",
     "mocha": "^9.1.0",
     "typescript": "^4.4.2"
