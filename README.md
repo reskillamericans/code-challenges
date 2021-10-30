@@ -13,6 +13,7 @@ The currently implemented Sandboxes are:
 
 - [Maze Challenge](https://reskillamericans.github.io/code-challenges/maze-challenge)
 - [Sorting Challenge](https://reskillamericans.github.io/code-challenges/sorting-challenge)
+- [Days in a Month Challenge](https://reskillamericans.github.io/code-challenges/days-in-a-month)
 
 ## Setup and Installation
 
