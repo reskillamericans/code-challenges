@@ -76,7 +76,8 @@ function pct(n: number): string {
 
 function initializePage() {
   const page = bindElements('sample', 'ucode', 'chars', 'accuracy',
-    'efficiency', 'error', 'canonical-years', 'boast');
+    'efficiency', 'error', 'canonical-years',
+    'boast', 'accuracy2', 'chars2', 'tweet-link');
 
   page.sample.textContent = correctDom.toString();
 
@@ -124,6 +125,11 @@ function runUserTest(page: ElementBindings) {
   page.accuracy.style['color'] = (results.accuracy < 1 ? 'red' : 'darkgreen');
   page.efficiency.textContent = pct(results.efficiency);
 
+  page.accuracy2.textContent = pct(results.accuracy);
+  page.chars2.textContent = results.chars.toString();
+
+  reviseTweetText(page, code);
+
   page['canonical-years'].innerHTML = formatYearHeaderHTML() +
     results.examples.map(formatYearHTML).join('\n');
 
@@ -147,6 +153,19 @@ function formatYearHTML(yearData: YearData) {
   return result;
 }
 
+function reviseTweetText(page: ElementBindings, code: string) {
+  let message = trimText(page.boast.textContent!);
+  message += `\n\n${code}\n\n`;
+  (page['tweet-link'] as HTMLAnchorElement).href =
+    `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}` +
+    `&url=${encodeURIComponent(location.href)}`;
+}
+
+function trimText(s: string): string {
+  s = s.trim();
+  return s.replace(/\s+/g, ' ');
+}
+
 function userCode(expr: string): DomFunction {
   return Function('m', 'y', '"use strict";return (' + expr + ')') as DomFunction;
 }
@@ -157,6 +176,12 @@ function showUserError(page: ElementBindings, s: string) {
     page.boast.style['display'] = 'block';
     return;
   }
+
+  page.chars.textContent = '0'
+  page.accuracy.textContent = '0.00%';
+  page.accuracy.style['color'] = 'red';
+  page.efficiency.textContent = '0.00%';
+
   page.error.textContent = s;
   page.error.style['display'] = 'block';
 
