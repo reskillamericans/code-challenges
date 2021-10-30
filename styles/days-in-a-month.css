@@ -63,12 +63,14 @@ div.analysis {
 }
 
 #error {
-  display: none;
+  visibility: hidden;
   background-color: lightpink;
   color: red;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  margin: 1rem;
   padding: 0.6rem;
+  position: relative;
+  margin: -1rem 0;
+  z-index: 1;
 }
 
 #canonical-years {

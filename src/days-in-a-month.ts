@@ -133,7 +133,6 @@ function runUserTest(page: ElementBindings) {
   page['canonical-years'].innerHTML = formatYearHeaderHTML() +
     results.examples.map(formatYearHTML).join('\n');
 
-  console.log(results);
 }
 
 function formatYearHeaderHTML() {
@@ -171,20 +170,25 @@ function userCode(expr: string): DomFunction {
 }
 
 function showUserError(page: ElementBindings, s: string) {
+  // No error - show all the stats and hide the error box
   if (s === "") {
-    page.error.style['display'] = 'none';
-    page.boast.style['display'] = 'block';
+    page.error.style['visibility'] = 'hidden';
+
+    page['canonical-years'].style['visibility'] = 'visible';
+    page.boast.style['visibility'] = 'visible';
+
     return;
   }
 
+  // Expression is in error - show the error box and hide the stats.
   page.chars.textContent = '0'
   page.accuracy.textContent = '0.00%';
   page.accuracy.style['color'] = 'red';
   page.efficiency.textContent = '0.00%';
 
   page.error.textContent = s;
-  page.error.style['display'] = 'block';
+  page.error.style['visibility'] = 'visible';
 
-  page['canonical-years'].innerHTML = '';
-  page.boast.style['display'] = 'none';
+  page['canonical-years'].style['visibility'] = 'hidden';
+  page.boast.style['visibility'] = 'visible';
 }
