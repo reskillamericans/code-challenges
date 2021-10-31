@@ -1,4 +1,14 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { assert } from 'chai';
+import puppeteer from 'puppeteer';
 import { evaluateDomFunction, pct } from './days-in-a-month.js';
 suite('pct', () => {
     test('assorted percentages', () => {
@@ -51,4 +61,39 @@ suite('DoM', () => {
         }
     });
 });
+const HOST = 'http://localhost:8080';
+suite('Headless browser tests', () => {
+    let browser;
+    let page;
+    setup(() => __awaiter(void 0, void 0, void 0, function* () {
+        browser = yield puppeteer.launch();
+        page = yield browser.newPage();
+        page.setViewport({
+            width: 1080,
+            height: 1080
+        });
+        yield page.goto(`${HOST}/days-in-a-month`);
+    }));
+    teardown(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield browser.close();
+    }));
+    // test('screenshot', async () => {
+    //   await page.screenshot({ path: 'images/day-in-a-month.png', fullPage: true });
+    // });
+    test('no initial error shown', () => __awaiter(void 0, void 0, void 0, function* () {
+        const isHidden = yield page.$eval('#error', (elem) => {
+            return window.getComputedStyle(elem).visibility === 'hidden';
+        });
+        assert.isTrue(isHidden);
+    }));
+    test('error shown on bad expression', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield page.focus('#ucode');
+        yield page.keyboard.type('xxx');
+        yield page.screenshot({ path: 'images/day-in-a-month.png', fullPage: true });
+        const isVisible = yield page.$eval('#error', (elem) => {
+            return window.getComputedStyle(elem).visibility === 'visible';
+        });
+        assert.isTrue(isVisible);
+    }));
+}).timeout(10000);
 //# sourceMappingURL=test-days-in-a-month.js.map

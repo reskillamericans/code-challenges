@@ -1,5 +1,7 @@
 import {assert} from 'chai';
 
+import puppeteer, { Browser, Page } from 'puppeteer';
+
 import { DomFunction, correctDom, evaluateDomFunction, pct,
   canonicalYears  } from './days-in-a-month.js'
 
@@ -61,3 +63,45 @@ suite('DoM', () => {
     }
   });
 });
+
+const HOST = 'http://localhost:8080';
+
+suite('Headless browser tests', () => {
+  let browser: Browser;
+  let page:  Page;
+
+  setup(async () => {
+    browser = await puppeteer.launch();
+    page = await browser.newPage();
+    page.setViewport({
+      width: 1080,
+      height: 1080
+    });
+    await page.goto(`${HOST}/days-in-a-month`);
+  });
+
+  teardown(async () => {
+    await browser.close();
+  });
+
+  // test('screenshot', async () => {
+  //   await page.screenshot({ path: 'images/day-in-a-month.png', fullPage: true });
+  // });
+
+  test('no initial error shown', async () => {
+    const isHidden = await page.$eval('#error', (elem) => {
+      return window.getComputedStyle(elem).visibility === 'hidden';
+  });
+    assert.isTrue(isHidden);
+  });
+
+  test('error shown on bad expression', async () => {
+    await page.focus('#ucode');
+    await page.keyboard.type('xxx');
+    await page.screenshot({ path: 'images/day-in-a-month.png', fullPage: true });
+    const isVisible = await page.$eval('#error', (elem) => {
+      return window.getComputedStyle(elem).visibility === 'visible';
+    });
+    assert.isTrue(isVisible);
+  });
+}).timeout(10000);
