@@ -98,7 +98,7 @@ suite('Headless browser tests', () => {
   test('error shown on bad expression', async () => {
     await page.focus('#ucode');
     await page.keyboard.type('xxx');
-    await page.screenshot({ path: 'images/day-in-a-month.png', fullPage: true });
+    // await page.screenshot({ path: 'images/day-in-a-month.png', fullPage: true });
     const isVisible = await page.$eval('#error', (elem) => {
       return window.getComputedStyle(elem).visibility === 'visible';
     });

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "test": "run-tests"
+    "test": "tools/run-tests"
   },
   "type": "module",
   "repository": {
