@@ -44,6 +44,8 @@ const successfulCandidates = [
     // @ts-ignore
     (m, y) => m == 2 ? 28 + (y % 4 == 0 && (y % 100 != 0 || y % 400 == 0) ? 1 : 0) : 30 + (m + (m > 7)) % 2,
     (m, y) => m != 2 ? 31 - (m + 9) % 12 % 5 % 2 : 28 + (y % 4 == 0 && (y % 100 != 0 || y % 400 == 0) ? 1 : 0),
+    // Written with help of GitHub Co-Pilot! 42 characters!
+    (m, y) => m == 2 ? y & 3 || !(y % 25) && y & 15 ? 28 : 29 : 30 + (m + m / 8 & 1)
 ];
 suite('DoM', () => {
     test('evaluateDomFunction - failing', () => {
@@ -89,7 +91,7 @@ suite('Headless browser tests', () => {
     test('error shown on bad expression', () => __awaiter(void 0, void 0, void 0, function* () {
         yield page.focus('#ucode');
         yield page.keyboard.type('xxx');
-        yield page.screenshot({ path: 'images/day-in-a-month.png', fullPage: true });
+        // await page.screenshot({ path: 'images/day-in-a-month.png', fullPage: true });
         const isVisible = yield page.$eval('#error', (elem) => {
             return window.getComputedStyle(elem).visibility === 'visible';
         });
