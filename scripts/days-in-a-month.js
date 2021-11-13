@@ -136,6 +136,6 @@ function showUserError(page, s) {
     page.error.textContent = s;
     page.error.style['visibility'] = 'visible';
     page['canonical-years'].style['visibility'] = 'hidden';
-    page.boast.style['visibility'] = 'visible';
+    page.boast.style['visibility'] = 'hidden';
 }
 //# sourceMappingURL=days-in-a-month.js.map
